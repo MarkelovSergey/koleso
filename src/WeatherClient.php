@@ -40,7 +40,7 @@ class WeatherClient
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $responseBody = $e->getResponse()->getBody();
-                $responseJson = json_decode($responseBody);
+                $responseJson = json_decode($responseBody->getContents());
 
                 throw new \Exception("Error: " . $responseJson->error->message);
             } else {
