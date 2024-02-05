@@ -1,48 +1,9 @@
 <?php
 
-require_once __DIR__ . "/vendor/autoload.php";
-
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use MarkelovSergey\Koleso\WeatherClient;
 
-function getWeather(string $apiKey, string $city): void
-{
-    $baseUrl = 'http://api.weatherapi.com/v1/forecast.json';
-
-    $client = new Client();
-
-    try {
-        $response = $client->request('GET', $baseUrl, [
-            'query' => [
-                'key' => $apiKey,
-                'q' => $city,
-                'days' => 2
-            ]
-        ]);
-
-        $data = json_decode($response->getBody(), true);
-
-        $cityName = $data['location']['name'];
-
-        $weatherToday = strtolower($data['forecast']['forecastday'][0]['day']['condition']['text']);
-
-        $weatherTomorrow = strtolower($data['forecast']['forecastday'][1]['day']['condition']['text']);
-
-        echo "Processed city $cityName | $weatherToday - $weatherTomorrow\n";
-    } catch (RequestException $e) {
-        if ($e->hasResponse()) {
-            $responseBody = $e->getResponse()->getBody();
-
-            $responseJson = json_decode($responseBody);
-
-            echo "Error: " . $responseJson->error->message . "\n";
-        } else {
-            echo "Error: " . $e->getMessage() . "\n";
-        }
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage() . "\n";
-    }
-}
+require_once __DIR__ . "/vendor/autoload.php";
 
 if (!isset($_ENV['CITY'])) {
     echo "Usage CITY environment (docker compose run --rm -e CITY=London app)\n";
@@ -54,8 +15,10 @@ if (!isset($_ENV['WEATHER_API_KEY'])) {
     exit();
 }
 
-$city = $_ENV['CITY'];
+$client = new Client();
 
-$apiKey = $_ENV['WEATHER_API_KEY'];
+$weather = new WeatherClient($client, $_ENV['WEATHER_API_KEY']);
 
-getWeather($apiKey, $city);
+$response = $weather->getWeatherByCity($_ENV['CITY']);
+
+echo "Processed city $response->city | $response->today - $response->tomorrow\n";
