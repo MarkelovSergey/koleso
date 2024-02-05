@@ -1,0 +1,14 @@
+{
+    "name": "markelovsergey/koleso",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Markelov Sergey",
+            "email": "markelo.v@ya.ru"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "guzzlehttp/guzzle": "^7.0"
+    }
+}
