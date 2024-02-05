@@ -9,6 +9,7 @@ Free [Weather API](https://www.weatherapi.com/) has a free plan, register to get
 
 ```bash
 git clone git@github.com:MarkelovSergey/koleso.git
+cd koleso
 mv .env.sample .env # Add WEATHER_API_KEY
 docker compose up -d
 docker compose run --rm app composer install
