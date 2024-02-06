@@ -24,7 +24,7 @@ docker compose run --rm -e CITY=Miami app
 ## Testing
 
 ```bash
-composer test
+docker compose run --rm app composer test
 ```
 
 ## Documentation
