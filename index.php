@@ -15,10 +15,16 @@ if (!isset($_ENV['WEATHER_API_KEY'])) {
     exit();
 }
 
-$client = new Client();
+try {
+    $client = new Client();
 
-$weather = new WeatherClient($client, $_ENV['WEATHER_API_KEY']);
+    $weather = new WeatherClient($client, $_ENV['WEATHER_API_KEY']);
 
-$response = $weather->getWeatherByCity($_ENV['CITY']);
+    $response = $weather->getWeatherByCity($_ENV['CITY']);
+    
+    echo "Processed city $response->city | $response->today - $response->tomorrow\n";
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage() . "\n";
 
-echo "Processed city $response->city | $response->today - $response->tomorrow\n";
+    exit();
+}
